@@ -7,8 +7,10 @@ namespace AggregateWithEFCore.Infrastructure
     {
         public DbSet<UserAggregateRoot> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=aggregatewithefcore.db");
+        public AppDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

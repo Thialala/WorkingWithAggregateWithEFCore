@@ -12,8 +12,12 @@ namespace AggregateWithEFCore
     {
         static async Task Main(string[] args)
         {
+            // C'est ici que l'on définit le provider: InMemory, SqlLite, SQL Server, etc....
+            // Donc je peux lire un fichier de config et instancier le bon provider
+            DbContextOptions options = new DbContextOptionsBuilder().UseSqlite("Data Source = aggregatewithefcore.db").Options;
+
             // Create an user aggregate and save it
-            using (var dbContext = new AppDbContext())
+            await using (var dbContext = new AppDbContext(options))
             {
                 dbContext.Database.EnsureCreated();
 
@@ -29,7 +33,7 @@ namespace AggregateWithEFCore
             }
 
             // Retrieve the previous saved user
-            using (var dbContext = new AppDbContext())
+            await using (var dbContext = new AppDbContext(options))
             {
 
                 var users = await dbContext.Users
@@ -41,7 +45,6 @@ namespace AggregateWithEFCore
                     Console.WriteLine($"{user.Id}\t{user.FirstName}\t{user.LastName}\t{user.Address.AddressLine}\t{user.Roles.First().RoleName}");
                 }
             }
-
         }
     }
 }
